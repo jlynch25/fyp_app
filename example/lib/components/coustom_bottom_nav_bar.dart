@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mylib_example/screens/home/home_screen.dart';
+import 'package:mylib_example/screens/network/network_screen.dart';
 import 'package:mylib_example/screens/profile/profile_screen.dart';
 
 import '../constants.dart';
@@ -50,12 +51,13 @@ class CustomBottomNavBar extends StatelessWidget {
               ),
               IconButton(
                 icon: Icon(
-                  Icons.favorite,
-                  color: MenuState.favourite == selectedMenu
+                  Icons.select_all,
+                  color: MenuState.network == selectedMenu
                       ? kPrimaryColor
                       : inActiveIconColor,
                 ),
-                onPressed: () {},
+                onPressed: () =>
+                    Navigator.pushNamed(context, NetworkScreen.routeName),
               ),
               IconButton(
                 icon: Icon(

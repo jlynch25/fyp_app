@@ -39,6 +39,11 @@ class _BodyState extends State<Body> {
     setState(() {
       this._currentWalletSelected = newValueSelected;
     });
+
+    setState(() async {
+      this._balance = int.parse((await Mylib.blockchainGetBalance(
+          _currentWalletSelected.address, "3000"))!);
+    });
   }
 
   @override
