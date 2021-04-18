@@ -5,13 +5,12 @@ import '../../enums.dart';
 import 'components/body.dart';
 
 class QrScannerScreen extends StatelessWidget {
-  static String routeName = "/qrscanner";
+  static String routeName = "/qr_scanner";
   QrScannerScreen();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: Body(),
       bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.home),
     );

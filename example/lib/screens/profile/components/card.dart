@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mylib/mylib.dart';
+import 'package:mylib_example/files.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/service/chat_service.dart';
 

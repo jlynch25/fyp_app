@@ -119,6 +119,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
                   blockchainResult = (await blockchainExists())!;
                   if (blockchainResult == "false") {
+                    print("Requesting Blockchain");
                     try {
                       await widget.service
                           .downloadGenBlock()

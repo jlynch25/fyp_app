@@ -29,20 +29,15 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == "getPlatformVersion") {
       result.success("Android ${Build.VERSION.RELEASE}")
-    } else if (call.method == "getApplicationDocumentsDirectory")  {
-      try {
-        result.success(Environment.getExternalStorageDirectory().toString())
-      } catch (e: Exception) {
-        result.error("NATIVE_ERR", e.message!!, null)
-      }
-    } else if (call.method == "blockchainStartNode") {
+    }  else if (call.method == "blockchainStartNode") {
       val args = call.arguments
       if (args is List<*>) {
         val walletAddress = args[0].toString()
         val nodeID = args[1].toString()
+        val localPath = args[2].toString()
         try {
 //          result.success("This the PATH:  " +Environment.getExternalStorageDirectory().toString())
-          result.success(TheBlockchain.startNode(nodeID,walletAddress))
+          result.success(TheBlockchain.startNode(nodeID, walletAddress, localPath))
 
         } catch (e: IllegalArgumentException) {
           result.error("BAD_ARGS", e.message!!, null)
@@ -54,10 +49,12 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
         result.error("BAD_ARGS", "Wrong argument types", null)
       }
     } else if (call.method == "blockchainReindexUTXO") {
-      val nodeID = call.arguments
-      if (nodeID is String) {
+      val args = call.arguments
+      if (args is List<*>) {
+        val nodeID = args[0].toString()
+        val localPath = args[1].toString()
         try {
-          result.success(TheBlockchain.reindexUTXO(nodeID))
+          result.success(TheBlockchain.reindexUTXO(nodeID, localPath))
 
         } catch (e: IllegalArgumentException) {
           result.error("BAD_ARGS", e.message!!, null)
@@ -69,10 +66,12 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
         result.error("BAD_ARGS", "Wrong argument types", null)
       }
     } else if (call.method == "blockchainListAddresses") {
-      val nodeID = call.arguments
-      if (nodeID is String) {
+      val args = call.arguments
+      if (args is List<*>) {
+        val nodeID = args[0].toString()
+        val localPath = args[1].toString()
         try {
-          result.success(TheBlockchain.listAddresses(nodeID))
+          result.success(TheBlockchain.listAddresses(nodeID, localPath))
 
         } catch (e: IllegalArgumentException) {
           result.error("BAD_ARGS", e.message!!, null)
@@ -84,11 +83,13 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
         result.error("BAD_ARGS", "Wrong argument types", null)
       }
     } else if (call.method == "blockchainCreateWallet") {
-      val nodeID = call.arguments
-      if (nodeID is String) {
+      val args = call.arguments
+      if (args is List<*>) {
+        val nodeID = args[0].toString()
+        val localPath = args[1].toString()
         try {
 //          result.success("This the PATH:  " +Environment.getExternalStorageDirectory().toString())
-          result.success(TheBlockchain.createWallet(nodeID))
+          result.success(TheBlockchain.createWallet(nodeID, localPath))
 
         } catch (e: IllegalArgumentException) {
           result.error("BAD_ARGS", e.message!!, null)
@@ -100,10 +101,12 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
         result.error("BAD_ARGS", "Wrong argument types", null)
       }
     } else if (call.method == "blockchainPrintChain") {
-      val nodeID = call.arguments
-      if (nodeID is String) {
+      val args = call.arguments
+      if (args is List<*>) {
+        val nodeID = args[0].toString()
+        val localPath = args[1].toString()
         try {
-          result.success(TheBlockchain.printChain(nodeID))
+          result.success(TheBlockchain.printChain(nodeID, localPath))
 
         } catch (e: IllegalArgumentException) {
           result.error("BAD_ARGS", e.message!!, null)
@@ -119,8 +122,9 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
       if (args is List<*>) {
         val walletAddress = args[0].toString()
         val nodeID = args[1].toString()
+        val localPath = args[2].toString()
         try {
-          result.success(TheBlockchain.createBlockChain(walletAddress,nodeID))
+          result.success(TheBlockchain.createBlockChain(walletAddress,nodeID,localPath))
 
         } catch (e: IllegalArgumentException) {
           result.error("BAD_ARGS", e.message!!, null)
@@ -136,8 +140,9 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
       if (args is List<*>) {
         val walletAddress = args[0].toString()
         val nodeID = args[1].toString()
+        val localPath = args[2].toString()
         try {
-          result.success(TheBlockchain.getBalance(walletAddress, nodeID))
+          result.success(TheBlockchain.getBalance(walletAddress, nodeID, localPath))
         } catch (e: IllegalArgumentException) {
           result.error("BAD_ARGS", e.message!!, null)
         } catch (e: Exception) {
@@ -154,9 +159,10 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
         val to = args[1].toString()
         val amount = args[2].toString().toLong()
         val nodeID = args[3].toString()
-        val mineNow = args[4].toString().toBoolean()
+        val localPath = args[4].toString()
+        val mineNow = args[5].toString().toBoolean()
         try {
-          result.success(TheBlockchain.send(from,to,amount,nodeID, mineNow))
+          result.success(TheBlockchain.send(from, to, amount, nodeID, localPath, mineNow))
 
         } catch (e: IllegalArgumentException) {
           result.error("BAD_ARGS", e.message!!, null)

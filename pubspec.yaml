@@ -2,7 +2,7 @@ name: mylib
 description: A new flutter plugin project.
 version: 0.0.1
 author:
-homepage:
+homepage: com.github.jlynch25.mylib
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  path_provider: ^2.0.1
 
 dev_dependencies:
   flutter_test:
