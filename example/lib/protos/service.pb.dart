@@ -1808,3 +1808,97 @@ class ListEventsRes extends $pb.GeneratedMessage {
   Event ensureEvent() => $_ensure(0);
 }
 
+class Chunk extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Chunk', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'service'), createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'Content', $pb.PbFieldType.OY, protoName: 'Content')
+    ..hasRequiredFields = false
+  ;
+
+  Chunk._() : super();
+  factory Chunk({
+    $core.List<$core.int>? content,
+  }) {
+    final _result = create();
+    if (content != null) {
+      _result.content = content;
+    }
+    return _result;
+  }
+  factory Chunk.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Chunk.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Chunk clone() => Chunk()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Chunk copyWith(void Function(Chunk) updates) => super.copyWith((message) => updates(message as Chunk)) as Chunk; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Chunk create() => Chunk._();
+  Chunk createEmptyInstance() => create();
+  static $pb.PbList<Chunk> createRepeated() => $pb.PbList<Chunk>();
+  @$core.pragma('dart2js:noInline')
+  static Chunk getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Chunk>(create);
+  static Chunk? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get content => $_getN(0);
+  @$pb.TagNumber(1)
+  set content($core.List<$core.int> v) { $_setBytes(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasContent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearContent() => clearField(1);
+}
+
+class DownloadReq extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'DownloadReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'service'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fileName', protoName: 'fileName')
+    ..hasRequiredFields = false
+  ;
+
+  DownloadReq._() : super();
+  factory DownloadReq({
+    $core.String? fileName,
+  }) {
+    final _result = create();
+    if (fileName != null) {
+      _result.fileName = fileName;
+    }
+    return _result;
+  }
+  factory DownloadReq.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory DownloadReq.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  DownloadReq clone() => DownloadReq()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  DownloadReq copyWith(void Function(DownloadReq) updates) => super.copyWith((message) => updates(message as DownloadReq)) as DownloadReq; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static DownloadReq create() => DownloadReq._();
+  DownloadReq createEmptyInstance() => create();
+  static $pb.PbList<DownloadReq> createRepeated() => $pb.PbList<DownloadReq>();
+  @$core.pragma('dart2js:noInline')
+  static DownloadReq getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DownloadReq>(create);
+  static DownloadReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get fileName => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set fileName($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasFileName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFileName() => clearField(1);
+}
+

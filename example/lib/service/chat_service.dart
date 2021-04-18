@@ -1,7 +1,9 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
+import 'package:mylib_example/files.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/protos/service.pbgrpc.dart';
 import 'package:grpc/grpc.dart';
@@ -63,7 +65,7 @@ class ChatService {
       if (result.hasUser() && result.hasAccessToken()) {
         user = result.user;
         bearerToken = result.accessToken;
-        print(bearerToken);
+        print(user);
       } else {
         return "server error";
       }
@@ -92,11 +94,13 @@ class ChatService {
     return "true";
   }
 
-  Future<String?> updateUser(User user) async {
+  Future<String?> updateUser(User userUpdate) async {
     try {
-      var result = await client.updateUser(UpdateUserReq(user: user));
+      var result = await client.updateUser(UpdateUserReq(user: userUpdate));
       if (result.hasUser()) {
-        user = result.user;
+        user.name = result.user.name;
+        user.email = result.user.email;
+        user.phoneNumber = result.user.phoneNumber;
         print(user);
       } else {
         return "server error";
@@ -147,6 +151,35 @@ class ChatService {
     } on GrpcError catch (err) {
       // TODO
     }
+  }
+
+  Future<String?> downloadGenBlock() async {
+    try {
+      final Directory directory = (await localDir('tmp/blocks_3000'))!;
+      File file = File('${directory.path}/000000.vlog');
+      await for (var result
+          in client.download(DownloadReq(fileName: '000000.vlog'))) {
+        file.writeAsBytesSync(result.content);
+      }
+      print(file.path);
+
+      file = File('${directory.path}/000002.sst');
+      await for (var result
+          in client.download(DownloadReq(fileName: '000002.sst'))) {
+        file.writeAsBytesSync(result.content);
+      }
+      print(file.path);
+
+      file = File('${directory.path}/MANIFEST');
+      await for (var result
+          in client.download(DownloadReq(fileName: 'MANIFEST'))) {
+        file.writeAsBytesSync(result.content);
+      }
+      print(file.path);
+    } on GrpcError catch (err) {
+      return err.message;
+    }
+    return "true";
   }
 
   Future<List<User>> listXFriends(String number) async {

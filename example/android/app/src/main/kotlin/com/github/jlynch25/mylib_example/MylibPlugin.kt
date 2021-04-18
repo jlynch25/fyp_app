@@ -29,6 +29,12 @@ class MylibPlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == "getPlatformVersion") {
       result.success("Android ${Build.VERSION.RELEASE}")
+    } else if (call.method == "getApplicationDocumentsDirectory")  {
+      try {
+        result.success(Environment.getExternalStorageDirectory().toString())
+      } catch (e: Exception) {
+        result.error("NATIVE_ERR", e.message!!, null)
+      }
     } else if (call.method == "blockchainStartNode") {
       val args = call.arguments
       if (args is List<*>) {

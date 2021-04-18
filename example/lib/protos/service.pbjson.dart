@@ -365,3 +365,23 @@ const ListEventsRes$json = const {
 
 /// Descriptor for `ListEventsRes`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listEventsResDescriptor = $convert.base64Decode('Cg1MaXN0RXZlbnRzUmVzEiQKBWV2ZW50GAEgASgLMg4uc2VydmljZS5FdmVudFIFZXZlbnQ=');
+@$core.Deprecated('Use chunkDescriptor instead')
+const Chunk$json = const {
+  '1': 'Chunk',
+  '2': const [
+    const {'1': 'Content', '3': 1, '4': 1, '5': 12, '10': 'Content'},
+  ],
+};
+
+/// Descriptor for `Chunk`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List chunkDescriptor = $convert.base64Decode('CgVDaHVuaxIYCgdDb250ZW50GAEgASgMUgdDb250ZW50');
+@$core.Deprecated('Use downloadReqDescriptor instead')
+const DownloadReq$json = const {
+  '1': 'DownloadReq',
+  '2': const [
+    const {'1': 'fileName', '3': 1, '4': 1, '5': 9, '10': 'fileName'},
+  ],
+};
+
+/// Descriptor for `DownloadReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List downloadReqDescriptor = $convert.base64Decode('CgtEb3dubG9hZFJlcRIaCghmaWxlTmFtZRgBIAEoCVIIZmlsZU5hbWU=');

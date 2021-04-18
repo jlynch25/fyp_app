@@ -104,6 +104,10 @@ class ServiceClient extends $grpc.Client {
           '/service.Service/ListEvents',
           ($0.ListEventsReq value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $0.ListEventsRes.fromBuffer(value));
+  static final _$download = $grpc.ClientMethod<$0.DownloadReq, $0.Chunk>(
+      '/service.Service/Download',
+      ($0.DownloadReq value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Chunk.fromBuffer(value));
 
   ServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -204,6 +208,13 @@ class ServiceClient extends $grpc.Client {
       {$grpc.CallOptions? options}) {
     return $createStreamingCall(
         _$listEvents, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
+  $grpc.ResponseStream<$0.Chunk> download($0.DownloadReq request,
+      {$grpc.CallOptions? options}) {
+    return $createStreamingCall(
+        _$download, $async.Stream.fromIterable([request]),
         options: options);
   }
 }
@@ -343,6 +354,13 @@ abstract class ServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.ListEventsReq.fromBuffer(value),
         ($0.ListEventsRes value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DownloadReq, $0.Chunk>(
+        'Download',
+        download_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $0.DownloadReq.fromBuffer(value),
+        ($0.Chunk value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateUserRes> createUser_Pre(
@@ -436,6 +454,11 @@ abstract class ServiceBase extends $grpc.Service {
     yield* listEvents(call, await request);
   }
 
+  $async.Stream<$0.Chunk> download_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.DownloadReq> request) async* {
+    yield* download(call, await request);
+  }
+
   $async.Future<$0.CreateUserRes> createUser(
       $grpc.ServiceCall call, $0.CreateUserReq request);
   $async.Future<$0.LoginUserRes> loginUser(
@@ -470,4 +493,6 @@ abstract class ServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.DeleteEventReq request);
   $async.Stream<$0.ListEventsRes> listEvents(
       $grpc.ServiceCall call, $0.ListEventsReq request);
+  $async.Stream<$0.Chunk> download(
+      $grpc.ServiceCall call, $0.DownloadReq request);
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:grpc/grpc.dart';
@@ -27,6 +29,7 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   User user = ChatService.user;
   String updateResult = "false";
+  String blockchainResult = "false";
   String userBalance = "0";
   late Future<List<User>> friends;
 
@@ -179,16 +182,30 @@ class _BodyState extends State<Body> {
             },
           ),
           ProfileMenu(
-            text: "balance",
+            text: "get Blockchain now",
             icon: Icon(
               Icons.account_balance,
               size: getProportionateScreenWidth(18),
             ),
             press: () async {
-              // userBalance =
-              // await Mylib.blockchainGetBalance(user.walletAddress, "3000");
-
-              // _buildDialog(context, userBalance);
+              try {
+                await widget.service
+                    .downloadGenBlock()
+                    .then((val) => setState(() {
+                          blockchainResult = val!;
+                        }));
+              } on GrpcError catch (err) {
+                // _buildDialog(context, err.message);
+                final snackBar = SnackBar(
+                  content: Text(err.message!),
+                );
+                Scaffold.of(context).showSnackBar(snackBar);
+              } on FileSystemException catch (err) {
+                final snackBar = SnackBar(
+                  content: Text(err.message),
+                );
+                Scaffold.of(context).showSnackBar(snackBar);
+              }
             },
           ),
           ProfileMenu(

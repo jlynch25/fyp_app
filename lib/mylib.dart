@@ -10,43 +10,61 @@ class Mylib {
     return version;
   }
 
-  static Future<String?> blockchainStartNode(String walletAddres, String nodeID) async {
-    final String? data = await _channel.invokeMethod('blockchainStartNode', [walletAddres, nodeID]);
+  // static Future<String?> get localPath async {
+  //   final String? directory =
+  //       await _channel.invokeMethod('getApplicationDocumentsDirectory');
+  //   return directory;
+  // }
+
+  static Future<String?> blockchainStartNode(
+      String walletAddres, String nodeID) async {
+    final String? data = await _channel
+        .invokeMethod('blockchainStartNode', [walletAddres, nodeID]);
     return data;
   }
 
   static Future<String?> blockchainReindexUTXO(String nodeID) async {
-    final String? data = await _channel.invokeMethod('blockchainReindexUTXO', nodeID);
+    final String? data =
+        await _channel.invokeMethod('blockchainReindexUTXO', nodeID);
     return data;
   }
 
   static Future<String?> blockchainListAddresses(String nodeID) async {
-    final String? data = await _channel.invokeMethod('blockchainListAddresses', nodeID);
+    final String? data =
+        await _channel.invokeMethod('blockchainListAddresses', nodeID);
     return data;
   }
 
   static Future<String?> blockchainCreateWallet(String nodeID) async {
-    final String? data = await _channel.invokeMethod('blockchainCreateWallet', nodeID);
+    final String? data =
+        await _channel.invokeMethod('blockchainCreateWallet', nodeID);
     return data;
   }
 
   static Future<String?> blockchainPrintChain(String nodeID) async {
-    final String? data = await _channel.invokeMethod('blockchainPrintChain', nodeID);
+    final String? data =
+        await _channel.invokeMethod('blockchainPrintChain', nodeID);
     return data;
   }
 
-  static Future<String?> blockchainCreateBlockChain(String walletAddres, String nodeID) async {
-    final String? data = await _channel.invokeMethod('blockchainCreateBlockChain', [walletAddres, nodeID]);
+  static Future<String?> blockchainCreateBlockChain(
+      String walletAddres, String nodeID) async {
+    final String? data = await _channel
+        .invokeMethod('blockchainCreateBlockChain', [walletAddres, nodeID]);
     return data;
   }
 
-  static Future<String?> blockchainGetBalance(String walletAddres, String nodeID) async {
-    final String? data = await _channel.invokeMethod('blockchainGetBalance', [walletAddres, nodeID]);
+  static Future<String?> blockchainGetBalance(
+      String walletAddres, String nodeID) async {
+    final String? data = await _channel
+        .invokeMethod('blockchainGetBalance', [walletAddres, nodeID]);
     return data;
   }
 
-  static Future<String> blockchainSend(String from, String to, int amount, String nodeID, bool mineNow) async {
-    final data = await _channel.invokeMethod('blockchainSend', [from, to, amount, nodeID, mineNow]);
+  static Future<String> blockchainSend(
+      String from, String to, int amount, String nodeID, bool mineNow) async {
+    final data = await _channel
+        .invokeMethod('blockchainSend', [from, to, amount, nodeID, mineNow]);
     return data.toString();
   }
-} 
+}

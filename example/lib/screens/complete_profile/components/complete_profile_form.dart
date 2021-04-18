@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:mylib/mylib.dart';
 import 'package:mylib_example/components/default_button.dart';
 import 'package:mylib_example/components/form_error.dart';
+import 'package:mylib_example/files.dart';
 import 'package:mylib_example/protos/service.pb.dart';
+import 'package:mylib_example/screens/home/home_screen.dart';
 // import 'package:flutterClient/screens/otp/otp_screen.dart';
 import 'package:mylib_example/screens/login_success/login_success_screen.dart';
 import 'package:mylib_example/screens/otp/otp_screen.dart';
@@ -26,6 +31,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   late String displayName;
   late String phoneNumber;
   String updateResult = "false";
+  String blockchainResult = "false";
 
   void addError({required String error}) {
     if (!errors.contains(error))
@@ -73,7 +79,72 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
                 if (updateResult == "true") {
                   // if all are valid then go to success screen
-                  Navigator.pushNamed(context, ProfileScreen.routeName);
+                  Navigator.pushNamed(context, HomeScreen.routeName);
+
+                  updateResult = "false";
+                  // Lets do some backgound work
+                  // add first wallet
+                  if (ChatService.user.wallets.isEmpty) {
+                    try {
+                      String newAddress =
+                          (await Mylib.blockchainCreateWallet("3000"))!;
+
+                      Wallet wallet = Wallet();
+                      wallet.title = "Primary";
+                      wallet.address = newAddress;
+                      await widget.service
+                          .addWallet(wallet)
+                          .then((val) => setState(() {
+                                updateResult = val!;
+                              }));
+                    } on GrpcError catch (err) {
+                      // _buildDialog(context, err.message);
+                      final snackBar = SnackBar(
+                        content: Text(err.message!),
+                      );
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                    if (updateResult == "true") {
+                      print("A Wallet exists");
+                    } else {
+                      // _buildDialog(context, updateResult);
+                      final snackBar = SnackBar(
+                        content: Text(updateResult),
+                      );
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  }
+                  // TODO - download inital blockchain
+                  updateResult = "false";
+
+                  blockchainResult = (await blockchainExists())!;
+                  if (blockchainResult == "false") {
+                    try {
+                      await widget.service
+                          .downloadGenBlock()
+                          .then((val) => setState(() {
+                                blockchainResult = val!;
+                              }));
+                    } on GrpcError catch (err) {
+                      // _buildDialog(context, err.message);
+                      final snackBar = SnackBar(
+                        content: Text(err.message!),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } on FileSystemException catch (err) {
+                      final snackBar = SnackBar(
+                        content: Text(err.message),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  } else {
+                    print("Blockchain exists");
+                  }
+                  //
+                  // TODO - grpc get bootstrap ip addresses for blopckchain network
+                  //
+                  // TODO - start node (with timeout ) only need to wait if an error is returned
+
                 } else {
                   _buildDialog(context, updateResult);
                 }
