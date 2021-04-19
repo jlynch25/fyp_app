@@ -11,11 +11,11 @@ class QrMakerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          // title: Text(
-          //   "Make a QR code",
-          //   style: Theme.of(context).textTheme.headline4,
-          // ),
-          ),
+        // title: Text(
+        //   "Make a QR code",
+        //   style: Theme.of(context).textTheme.headline4,
+        // ),
+      ),
       body: Body(),
       bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.home),
     );

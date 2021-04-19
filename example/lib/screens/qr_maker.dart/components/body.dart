@@ -5,6 +5,13 @@ import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/service/chat_service.dart';
 import 'package:mylib_example/size_config.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -12,6 +19,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  GlobalKey globalKey = new GlobalKey();
   User user = ChatService.user;
   TextEditingController amount = TextEditingController();
   late List<Wallet> _wallets;
@@ -106,30 +114,86 @@ class _BodyState extends State<Body> {
                         }
                       },
                     ),
-                    SizedBox(height: getProportionateScreenHeight(30)),
+                    SizedBox(height: getProportionateScreenHeight(40)),
                     isSwitched
                         ? (Column(children: [
-                            QrImage(
-                              data: """Transaction{
-                                    amount: ${amount.text},
-                                    reciever: ${user.name},
-                                    wallet{ $_currentWalletSelected },
+                            RepaintBoundary(
+                                key: globalKey,
+                                child: QrImage(
+                                  data: """Transaction{
+                                                    amount: ${amount.text},
+                                                    reciever: ${user.name},
+                                                    wallet{ $_currentWalletSelected },
+                                                    }""",
+                                  version: QrVersions.auto,
+                                  size: 250,
+                                  gapless: false,
 
-                                    }""",
-                              version: QrVersions.auto,
-                              size: 250,
-                              gapless: false,
-                              // embeddedImage: AssetImage(
-                              //     'lib/assets/images/blockchain-vector-graphics.png'),
-                              // embeddedImageStyle: QrEmbeddedImageStyle(
-                              //   color: Colors.black,
-                              //   size: Size(100, 100),
-                              // ),
-                              foregroundColor: Colors.teal,
+                                  // embeddedImage: AssetImage(
+                                  //     'lib/assets/images/blockchain-vector-graphics.png'),
+                                  // embeddedImageStyle: QrEmbeddedImageStyle(
+                                  //   color: Colors.black,
+                                  //   size: Size(100, 100),
+                                  // ),
+                                  foregroundColor: Colors.teal,
+                                )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.share),
+                                  onPressed: _captureAndSharePng,
+                                ),
+                                SizedBox(
+                                    width: getProportionateScreenWidth(20)),
+                                IconButton(
+                                  icon: Icon(Icons.print),
+                                  onPressed: _captureAndSharePng,
+                                )
+                              ],
                             ),
                           ]))
                         : SizedBox(height: getProportionateScreenHeight(30)),
                   ],
                 ))));
+  }
+
+  Future<Uint8List> toQrImageData() async {
+    try {
+      final image = await QrPainter(
+        data: """Transaction{
+                  amount: ${amount.text},
+                  reciever: ${user.name},
+                  wallet{ $_currentWalletSelected },
+                }""",
+        version: QrVersions.auto,
+        gapless: false,
+        color: Colors.teal,
+      ).toImage(300);
+      final a = await image.toByteData(format: ImageByteFormat.png);
+      return a!.buffer.asUint8List();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> _captureAndSharePng() async {
+    try {
+      //  RenderRepaintBoundary boundary = globalKey.currentContext.findRenderObject();
+      //   var image = await boundary.toImage();
+      // ByteData byteData =
+      //     (await image.toByteData(format: ImageByteFormat.png))!;
+      // Uint8List pngBytes = byteData.buffer.asUint8List();
+
+      var pngBytes = await toQrImageData();
+
+      final tempDir = await getTemporaryDirectory();
+      final file = await new File('${tempDir.path}/image.png').create();
+      await file.writeAsBytes(pngBytes);
+
+      Share.shareFiles(['${tempDir.path}/image.png'], text: 'Share QR code');
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
