@@ -31,7 +31,7 @@ dependencies:
   crypto: ^3.0.1
 
   qr_flutter: ^4.0.0
-  # qr_code_scanner: ^0.4.0
+  qr_code_scanner: ^0.4.0
   share: ^2.0.1
 
 dev_dependencies:

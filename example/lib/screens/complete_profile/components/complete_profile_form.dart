@@ -83,40 +83,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
                   updateResult = "false";
                   // Lets do some backgound work
-                  // add first wallet
-                  if (ChatService.user.wallets.isEmpty) {
-                    try {
-                      String newAddress =
-                          (await Mylib.blockchainCreateWallet("3000"))!;
-
-                      Wallet wallet = Wallet();
-                      wallet.title = "Primary";
-                      wallet.address = newAddress;
-                      await widget.service
-                          .addWallet(wallet)
-                          .then((val) => setState(() {
-                                updateResult = val!;
-                              }));
-                    } on GrpcError catch (err) {
-                      // _buildDialog(context, err.message);
-                      final snackBar = SnackBar(
-                        content: Text(err.message!),
-                      );
-                      Scaffold.of(context).showSnackBar(snackBar);
-                    }
-                    if (updateResult == "true") {
-                      print("A Wallet exists");
-                    } else {
-                      // _buildDialog(context, updateResult);
-                      final snackBar = SnackBar(
-                        content: Text(updateResult),
-                      );
-                      Scaffold.of(context).showSnackBar(snackBar);
-                    }
-                  }
-                  // TODO - download inital blockchain
-                  updateResult = "false";
-
+                  //
                   blockchainResult = (await blockchainExists())!;
                   if (blockchainResult == "false") {
                     print("Requesting Blockchain");
@@ -141,6 +108,42 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                   } else {
                     print("Blockchain exists");
                   }
+                  //
+                  // add first wallet
+                  if (ChatService.user.wallets.isEmpty) {
+                    try {
+                      String newAddress =
+                          (await Mylib.blockchainCreateWallet("3000"))!;
+
+                      Wallet wallet = Wallet();
+                      wallet.title = "Primary";
+                      wallet.address = newAddress;
+                      await widget.service
+                          .addWallet(wallet)
+                          .then((val) => setState(() {
+                                updateResult = val!;
+                              }));
+                    } on GrpcError catch (err) {
+                      // _buildDialog(context, err.message);
+                      final snackBar = SnackBar(
+                        content: Text(err.message!),
+                      );
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                    if (updateResult == "true") {
+                      print("A new Wallet done");
+                    } else {
+                      // _buildDialog(context, updateResult);
+                      final snackBar = SnackBar(
+                        content: Text(updateResult),
+                      );
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  } else {
+                    print("A wallet existed");
+                  }
+                  // TODO - download inital blockchain
+                  updateResult = "false";
                   //
                   // TODO - grpc get bootstrap ip addresses for blopckchain network
                   //

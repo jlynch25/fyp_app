@@ -12,16 +12,17 @@ Future<Directory?> localDir(String dirPath) async {
   final localPath = await getApplicationDocumentsDirectory();
   new Directory('${localPath.path}/tmp').create(recursive: true);
   new Directory('${localPath.path}/$dirPath').create(recursive: true);
+  // print(Directory('${localPath.path}/$dirPath').listSync());
   return Directory('${localPath.path}/$dirPath');
 }
 
 Future<String?> blockchainExists() async {
   final path = await localDir('tmp/blocks_3000');
   if (path!.existsSync()) {
-    final lockfile = File('$path/LOCK');
-    if (lockfile.existsSync()) {
-      lockfile.deleteSync();
-    }
+    // final lockfile = File('$path/LOCK');
+    // if (lockfile.existsSync()) {
+    //   lockfile.deleteSync();
+    // }
     return "true";
   } else {
     return "false";
