@@ -33,10 +33,10 @@ class _BodyState extends State<Body> {
                       isSwitched = value;
                       print(isSwitched);
                     });
-                    output = await Mylib.blockchainStartNode(
-                        user.wallets[0].address, "3000");
-
-                    print(output);
+                    // print("staring node");
+                    // output = await Mylib.blockchainStartNode(
+                    //     user.wallets[0].address, "3000");
+                    // print(output);
                   },
                   activeTrackColor: Colors.lightGreenAccent,
                   activeColor: Colors.green,

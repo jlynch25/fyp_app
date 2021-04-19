@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mylib_example/screens/complete_profile/complete_profile_screen.dart';
 import 'package:mylib_example/screens/home/components/send_card.dart';
 import 'package:mylib_example/screens/profile/profile_screen.dart';
+import 'package:mylib_example/screens/qr_maker.dart/qr_maker_screen.dart';
 import 'package:mylib_example/screens/qr_scanner.dart/qr_scanner_screen.dart';
 import 'package:mylib_example/screens/send_select_address.dart/send_select_address_screen.dart';
 import 'package:mylib_example/service/chat_service.dart';
@@ -92,12 +93,12 @@ class Body extends StatelessWidget {
                   SendCard(
                     icon: Icons.qr_code,
                     text: "Make Qr Code",
-                    press: QrScannerScreen.routeName, //TODO
+                    press: QrMakerScreen.routeName, //TODO
                   ),
                   SendCard(
                     icon: Icons.contactless_outlined,
                     text: "NFC",
-                    press: CompleteProfileScreen.routeName,  //TODO
+                    press: CompleteProfileScreen.routeName, //TODO
                   ),
                 ],
               ),

@@ -30,6 +30,7 @@ dependencies:
   protobuf: ^2.0.0
   crypto: ^3.0.1
 
+  qr_flutter: ^4.0.0
   # qr_code_scanner: ^0.4.0
 
 dev_dependencies:
@@ -49,8 +50,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-  - lib/assets/cert/public.crt
-  #   - images/a_dot_burr.jpeg
+    - lib/assets/cert/public.crt
+    - lib/assets/images/blockchain-vector-graphics.png
+    - lib/assets/images/blockchain-1.1s-47px.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
