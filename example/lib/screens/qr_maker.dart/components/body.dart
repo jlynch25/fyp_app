@@ -99,6 +99,7 @@ class _BodyState extends State<Body> {
                           onChanged: (value) {
                             _onDropDownWalletSelected(value!);
                             _onCreate(false);
+                            FocusScope.of(context).unfocus();
                           },
                           value: _currentWalletSelected,
                         ),
@@ -111,6 +112,7 @@ class _BodyState extends State<Body> {
                         if (amount.text.isNotEmpty &&
                             _currentWalletSelected.address.isNotEmpty) {
                           _onCreate(true);
+                          FocusScope.of(context).unfocus();
                         }
                       },
                     ),
