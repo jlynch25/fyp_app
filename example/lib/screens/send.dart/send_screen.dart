@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mylib_example/components/coustom_bottom_nav_bar.dart';
 import 'package:mylib_example/components/send_args.dart';
-import 'package:mylib_example/protos/service.pb.dart';
 
 import '../../enums.dart';
 import 'components/body.dart';

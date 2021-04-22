@@ -6,6 +6,7 @@ import 'package:mylib_example/screens/profile/profile_screen.dart';
 import 'package:mylib_example/screens/qr_maker.dart/qr_maker_screen.dart';
 import 'package:mylib_example/screens/qr_scanner.dart/qr_scanner_screen.dart';
 import 'package:mylib_example/screens/send.dart/send_screen.dart';
+import 'package:mylib_example/screens/send_from_request/send_from_request_screen.dart';
 import 'package:mylib_example/screens/send_select_address.dart/send_select_address_screen.dart';
 import 'package:mylib_example/screens/sign_in/sign_in_screen.dart';
 import 'package:mylib_example/screens/forgot_password/forgot_password_screen.dart';
@@ -33,5 +34,6 @@ final Map<String, WidgetBuilder> routes = {
   SendSelectAdressScreen.routeName: (context) =>
       SendSelectAdressScreen(ChatService()),
   SendScreen.routeName: (context) => SendScreen(),
+  SendFromRequestScreen.routeName: (context) => SendFromRequestScreen(),
   NetworkScreen.routeName: (context) => NetworkScreen(ChatService()),
 };

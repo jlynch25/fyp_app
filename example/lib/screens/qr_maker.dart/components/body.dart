@@ -122,11 +122,11 @@ class _BodyState extends State<Body> {
                             RepaintBoundary(
                                 key: globalKey,
                                 child: QrImage(
-                                  data: """Transaction{
-                                                    amount: ${amount.text},
-                                                    reciever: ${user.name},
-                                                    wallet{ $_currentWalletSelected },
-                                                    }""",
+                                  data: """{
+                                            "amount": "${amount.text}",
+                                            "reciever": "${user.name}",
+                                            "address":  "${_currentWalletSelected.address}"
+                                            }""",
                                   version: QrVersions.auto,
                                   size: 250,
                                   gapless: false,

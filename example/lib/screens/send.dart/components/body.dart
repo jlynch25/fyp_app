@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mylib/mylib.dart';
 import 'package:mylib_example/components/default_button.dart';
 import 'package:mylib_example/protos/service.pb.dart';
+import 'package:mylib_example/screens/home/home_screen.dart';
 import 'package:mylib_example/service/chat_service.dart';
 import 'package:mylib_example/size_config.dart';
 
@@ -41,9 +42,26 @@ class _BodyState extends State<Body> {
     });
 
     setState(() async {
-      this._balance = int.parse((await Mylib.blockchainGetBalance(
-          _currentWalletSelected.address, "3000"))!);
+      this.balance =
+          Mylib.blockchainGetBalance(_currentWalletSelected.address, "3000");
+      this._balance = int.parse((await balance)!);
+      if (amount.text.isEmpty) {
+        this._newbalance = _balance;
+      } else {
+        this._newbalance = _balance - int.parse(amount.text);
+      }
+
+      // (await Mylib.blockchainGetBalance(
+      //   _currentWalletSelected.address, "3000"))!);
     });
+  }
+
+  void _onAmountChange(String val) async {
+    if (val.isEmpty) {
+      setState(() => _newbalance = _balance);
+    } else {
+      setState(() => _newbalance = _balance - int.parse(val));
+    }
   }
 
   @override
@@ -78,11 +96,12 @@ class _BodyState extends State<Body> {
                       ),
                     ),
                     onChanged: (val) {
-                      if (val.isEmpty) {
-                        setState(() => _newbalance = _balance);
-                      } else {
-                        setState(() => _newbalance = _balance - int.parse(val));
-                      }
+                      // if (val.isEmpty) {
+                      //   setState(() => _newbalance = _balance);
+                      // } else {
+                      //   setState(() => _newbalance = _balance - int.parse(val));
+                      // }
+                      _onAmountChange(val);
                     },
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
@@ -151,6 +170,10 @@ class _BodyState extends State<Body> {
                           Scaffold.of(context).showSnackBar(snackBar);
                         } on Error catch (err) {
                           print(err);
+                        }
+                        if (output == "Success!") {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, HomeScreen.routeName);
                         }
                       }
                     },

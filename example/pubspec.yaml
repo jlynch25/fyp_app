@@ -25,6 +25,15 @@ dependencies:
   cupertino_icons: ^1.0.0
 
   path_provider: ^2.0.1
+  workmanager: ^0.4.0
+  flutter_local_notifications: ^5.0.0+1
+  watcher: ^1.0.0
+  flutter_foreground_plugin: 
+    git:
+      url: git://github.com/jja08111/flutter_foreground_service_plugin.git
+      ref: master
+
+  # android_long_task: ^0.3.3
 
   grpc: ^3.0.0
   protobuf: ^2.0.0

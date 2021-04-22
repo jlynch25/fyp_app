@@ -18,10 +18,10 @@ class Mylib {
   // }
 
   static Future<String?> blockchainStartNode(
-      String walletAddres, String nodeID) async {
+      String walletAddres, String nodeID, String bootstrapAddress) async {
     final localPath = await getApplicationDocumentsDirectory();
-    final String? data = await _channel.invokeMethod(
-        'blockchainStartNode', [walletAddres, nodeID, localPath.path]);
+    final String? data = await _channel.invokeMethod('blockchainStartNode',
+        [walletAddres, nodeID, localPath.path, bootstrapAddress]);
     return data;
   }
 
@@ -76,4 +76,9 @@ class Mylib {
         'blockchainSend', [from, to, amount, nodeID, localPath.path, mineNow]);
     return data.toString();
   }
+
+  // static Future<String> blockchainNetworkPeers() async {
+  //   final data = await _channel.invokeMethod('blockchainNetworkPeers');
+  //   return data.toString();
+  // }
 }
