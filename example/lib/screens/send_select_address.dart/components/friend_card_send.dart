@@ -83,6 +83,11 @@ class _FriendCardSendState extends State<FriendCardSend> {
           if (friend.wallets.isNotEmpty) {
             Navigator.pushNamed(context, SendScreen.routeName,
                 arguments: SendArguments(friend, friend.wallets[0].address));
+          } else {
+            final snackBar = SnackBar(
+              content: Text("${friend.name} does not have a wallet set up yet"),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         },
       ),
