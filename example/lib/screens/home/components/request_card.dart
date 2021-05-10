@@ -35,10 +35,8 @@ class RequestCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 25,
-                    ),
                     Text(
                       text,
                       style: TextStyle(

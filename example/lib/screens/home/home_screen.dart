@@ -18,9 +18,9 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Home"),
         actions: [
-          IconBtnWithCounter(
-            svgSrc: Icons.search,
-            press: () {
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
               showSearch(context: context, delegate: UserSearch());
             },
           ),

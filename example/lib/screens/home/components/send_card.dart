@@ -21,26 +21,31 @@ class SendCard extends StatelessWidget {
         Navigator.pushNamed(context, press);
       },
       child: SizedBox(
-        width: getProportionateScreenWidth(120),
+        width: getProportionateScreenWidth(110),
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(getProportionateScreenWidth(10)),
-              height: getProportionateScreenWidth(80),
-              width: getProportionateScreenWidth(80),
+              height: getProportionateScreenWidth(100),
+              width: getProportionateScreenWidth(120),
               decoration: BoxDecoration(
                 color: Color(0xFFFFECDF),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                icon,
-                size: 30,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    icon,
+                    size: 40,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(text, textAlign: TextAlign.center)
+                ],
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(text, textAlign: TextAlign.center)
           ],
         ),
       ),
