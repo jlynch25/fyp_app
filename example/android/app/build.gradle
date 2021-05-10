@@ -29,7 +29,7 @@ android {
     compileSdkVersion 29
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += 'src/main/kotlin' 
     }
 
     lintOptions {
@@ -67,4 +67,8 @@ repositories{
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api(name:'theBlockchain', ext:'aar')
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
+//    implementation "androidx.work:work-runtime-ktx:2.6.0-alpha02"
+
 }
