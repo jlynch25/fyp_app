@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grpc/grpc.dart';
 import 'package:mylib/mylib.dart';
 import 'package:mylib_example/files.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/service/chat_service.dart';
 
+import '../profile_screen.dart';
+
 class WalletCard extends StatefulWidget {
   final Color color;
-  final String address;
-  final String name;
+  final Wallet wallet;
+  final ChatService service;
 
-  WalletCard({required this.color, required this.address, required this.name});
+  WalletCard(
+      {required this.color, required this.wallet, required this.service});
 
   @override
   _WalletCardState createState() =>
-      _WalletCardState(this.color, this.address, this.name);
+      _WalletCardState(this.color, this.wallet.address, this.wallet.title);
 }
 
 class _WalletCardState extends State<WalletCard> {
@@ -24,6 +28,7 @@ class _WalletCardState extends State<WalletCard> {
   final String address;
   final String name;
   String _balance = "0";
+  String updateResult = "false";
   _WalletCardState(this.color, this.address, this.name);
 
   @override
@@ -70,9 +75,15 @@ class _WalletCardState extends State<WalletCard> {
                                 Icon(
                                   Icons.attach_money,
                                   color: Colors.white,
+                                  size: 30,
                                 ),
                                 Text(
                                   snapshot.data,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 30),
+                                ),
+                                Text(
+                                  ".00",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 )
@@ -92,13 +103,13 @@ class _WalletCardState extends State<WalletCard> {
                     child: PopupMenuButton(
                       icon: Icon(Icons.more_vert),
                       itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                        const PopupMenuItem(
-                          child: ListTile(
-                            leading: Icon(Icons.edit),
-                            title: Text('Edit Title'),
-                          ),
-                          value: 0,
-                        ),
+                        // const PopupMenuItem(
+                        //   child: ListTile(
+                        //     leading: Icon(Icons.edit),
+                        //     title: Text('Edit Title'),
+                        //   ),
+                        //   value: 0,
+                        // ),
                         const PopupMenuItem(
                           child: ListTile(
                             leading: Icon(Icons.content_copy),
@@ -133,7 +144,7 @@ class _WalletCardState extends State<WalletCard> {
                                 barrierDismissible: true,
                                 builder: (_) => AlertDialog(
                                         title: Text(
-                                            "It is not recommended to delete a wallet"),
+                                            "It is not recommended to delete a wallet, which is not empty."),
                                         actions: <Widget>[
                                           TextButton(
                                             child: Text('Close'),
@@ -158,8 +169,43 @@ class _WalletCardState extends State<WalletCard> {
                                           ),
                                           TextButton(
                                             child: Text('yes'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
+                                            onPressed: () async {
+                                              try {
+                                                // TODO posible remove wallet from device
+
+                                                await widget.service
+                                                    .removeWallet(widget.wallet)
+                                                    .then((val) => setState(() {
+                                                          updateResult = val!;
+                                                        }));
+                                              } on GrpcError catch (err) {
+                                                // _buildDialog(context, err.message);
+                                                final snackBar = SnackBar(
+                                                  content: Text(err.message!),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              }
+                                              if (updateResult == "true") {
+                                                final snackBar = SnackBar(
+                                                  content:
+                                                      Text('Removed Wallet'),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                                setState(() {});
+                                              } else {
+                                                // _buildDialog(context, updateResult);
+                                                final snackBar = SnackBar(
+                                                  content: Text(updateResult),
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              }
+
+                                              Navigator.pop(context);
+                                              Navigator.pushNamed(context,
+                                                  ProfileScreen.routeName);
                                             },
                                           ),
                                         ]));

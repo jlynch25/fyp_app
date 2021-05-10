@@ -16,7 +16,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.name),
+        // title: Text(user.name),
         automaticallyImplyLeading: false,
       ),
       body: Body(this.service),

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:grpc/grpc.dart';
 import 'package:mylib/mylib.dart';
 import 'package:mylib_example/protos/service.pb.dart';
+import 'package:mylib_example/screens/profile/profile_screen.dart';
 import 'package:mylib_example/service/chat_service.dart';
 
 TextEditingController titleController = new TextEditingController();
@@ -111,22 +112,24 @@ class _AddWalletState extends State<AddWallet> {
                   final snackBar = SnackBar(
                     content: Text(err.message!),
                   );
-                  Scaffold.of(context).showSnackBar(snackBar);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
                 if (updateResult == "true") {
                   final snackBar = SnackBar(
                     content: Text('Created a new Wallet'),
                   );
-                  Scaffold.of(context).showSnackBar(snackBar);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  setState(() {});
                 } else {
                   // _buildDialog(context, updateResult);
                   final snackBar = SnackBar(
                     content: Text(updateResult),
                   );
-                  Scaffold.of(context).showSnackBar(snackBar);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
 
                 Navigator.pop(context);
+                Navigator.pushNamed(context, ProfileScreen.routeName);
               })
         ],
       ),

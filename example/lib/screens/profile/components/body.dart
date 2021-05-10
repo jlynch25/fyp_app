@@ -51,6 +51,7 @@ class _BodyState extends State<Body> {
             Column(children: [
               Text(
                 "${user.name}",
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -86,9 +87,9 @@ class _BodyState extends State<Body> {
               children: <Widget>[
                 for (var wallet in user.wallets)
                   WalletCard(
-                    color: Colors.lightGreen,
-                    address: wallet.address,
-                    name: wallet.title,
+                    color: Colors.orangeAccent, //.lightGreen,
+                    wallet: wallet,
+                    service: widget.service,
                   ),
                 AddWallet(widget.service),
               ],
@@ -119,7 +120,8 @@ class _BodyState extends State<Body> {
                           for (var friend in snapshot.data)
                             FriendCard(
                               image: friend.name,
-                              name: friend.name,
+                              friend: friend,
+                              service: widget.service,
                             ),
                           MoreFriends(widget.service),
                         ],
@@ -216,8 +218,8 @@ class _BodyState extends State<Body> {
             ),
             press: () async {
               try {
-                // userBalance = await Mylib.blockchainCreateBlockChain(
-                // user.walletAddress, "3000");
+                userBalance = (await Mylib.blockchainCreateBlockChain(
+                    user.wallets[0].address, "3000"))!;
               } on Error catch (err) {
                 _buildDialog(context, err.toString());
               }
@@ -233,9 +235,10 @@ class _BodyState extends State<Body> {
             press: () async {
               try {
                 await widget.service.addFriends([
-                  "606b92277f2162d6454fbe81",
-                  "606b344656d2e9c987d5f883",
-                  "6066faa235b24a12f4b8c471"
+                  // "606b92277f2162d6454fbe81",
+                  // "606b344656d2e9c987d5f883",
+                  // "6066faa235b24a12f4b8c471"
+                  "60812b18497ac8be8651d507"
                 ]).then((val) => setState(() {
                       updateResult = val!;
                     }));
@@ -274,7 +277,7 @@ class _BodyState extends State<Body> {
             press: () async {
               try {
                 // userBalance =
-                // await Mylib.blockchainStartNode(user.wallet.address, "3000");
+                // await Mylib.blockchainStartNode(user.wallet.address, "3000", [""]);
               } on Error catch (err) {
                 _buildDialog(context, err.toString());
               }
