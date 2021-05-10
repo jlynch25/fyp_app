@@ -2,9 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/screens/home/home_screen.dart';
 import 'package:mylib_example/screens/network/network_screen.dart';
+import 'package:mylib_example/screens/nfc_scanner/nfc_scanner_screen.dart';
 import 'package:mylib_example/screens/profile/profile_screen.dart';
 import 'package:mylib_example/screens/qr_maker.dart/qr_maker_screen.dart';
 import 'package:mylib_example/screens/qr_scanner.dart/qr_scanner_screen.dart';
+import 'package:mylib_example/screens/request_currency/request_curreny_screen.dart';
 import 'package:mylib_example/screens/send.dart/send_screen.dart';
 import 'package:mylib_example/screens/send_from_request/send_from_request_screen.dart';
 import 'package:mylib_example/screens/send_select_address.dart/send_select_address_screen.dart';
@@ -36,4 +38,6 @@ final Map<String, WidgetBuilder> routes = {
   SendScreen.routeName: (context) => SendScreen(),
   SendFromRequestScreen.routeName: (context) => SendFromRequestScreen(),
   NetworkScreen.routeName: (context) => NetworkScreen(ChatService()),
+  RequestCurrencyScreen.routeName: (context) => RequestCurrencyScreen(),
+  NFCScannerScreen.routeName: (context) => NFCScannerScreen(),
 };
