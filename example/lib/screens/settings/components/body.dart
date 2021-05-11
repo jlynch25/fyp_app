@@ -7,6 +7,7 @@ import 'package:mylib/mylib.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/screens/profile/components/profile_menu.dart';
+import 'package:mylib_example/screens/sign_in/sign_in_screen.dart';
 // import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/service/chat_service.dart';
 import 'package:mylib_example/size_config.dart';
@@ -38,9 +39,31 @@ class _BodyState extends State<Body> {
             width: double.infinity,
             child: Container(
               child: Text(
+                " \n\t\t\t\tLog In to a different account",
+                style: TextStyle(
+                    color: Colors.black.withOpacity(0.5), fontSize: 25),
+                textAlign: TextAlign.left,
+              ),
+            ),
+          ),
+          ProfileMenu(
+            text: "LogOut",
+            icon: Icon(
+              Icons.logout,
+              size: getProportionateScreenWidth(18),
+            ),
+            press: () => {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  SignInScreen.routeName, (Route<dynamic> route) => false),
+            },
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Container(
+              child: Text(
                 " \n\t\t\t\tDeveloper Tools",
                 style: TextStyle(
-                    color: Colors.black.withOpacity(0.5), fontSize: 18),
+                    color: Colors.black.withOpacity(0.5), fontSize: 25),
                 textAlign: TextAlign.left,
               ),
             ),
