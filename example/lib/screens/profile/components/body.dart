@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
 import 'package:mylib/mylib.dart';
 import 'package:mylib_example/protos/service.pb.dart';
+import 'package:mylib_example/screens/edit_profile/edit_profile_screen.dart';
 import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/screens/settings/settings_screen.dart';
 // import 'package:mylib_example/screens/friend_list/friend_list.dart';
@@ -65,6 +66,7 @@ class _BodyState extends State<Body> {
                   OutlinedButton.icon(
                     onPressed: () {
                       // Respond to button press
+                      Navigator.pushNamed(context, EditProfileScreen.routeName);
                     },
                     icon: Icon(Icons.edit, size: 18),
                     label: Text("Edit"),
@@ -155,11 +157,11 @@ class _BodyState extends State<Body> {
                   }
                 } else {
                   return Container(
-                    height: 120,
+                    height: 80,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: <Widget>[
-                        AddFriend(widget.service),
+                        AddFirstFriend(widget.service),
                       ],
                     ),
                   );

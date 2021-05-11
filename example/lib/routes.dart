@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:mylib_example/screens/edit_profile/edit_profile_screen.dart';
 import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/screens/home/home_screen.dart';
+import 'package:mylib_example/screens/image_edit/image_edit_screen.dart';
 import 'package:mylib_example/screens/network/network_screen.dart';
 import 'package:mylib_example/screens/nfc_scanner/nfc_scanner_screen.dart';
 import 'package:mylib_example/screens/profile/profile_screen.dart';
@@ -42,4 +44,6 @@ final Map<String, WidgetBuilder> routes = {
   RequestCurrencyScreen.routeName: (context) => RequestCurrencyScreen(),
   NFCScannerScreen.routeName: (context) => NFCScannerScreen(),
   SettingsScreen.routeName: (context) => SettingsScreen(ChatService()),
+  EditProfileScreen.routeName: (context) => EditProfileScreen(ChatService()),
+  EditPhotoScreen.routeName: (context) => EditPhotoScreen(),
 };
