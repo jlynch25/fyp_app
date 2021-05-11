@@ -26,6 +26,7 @@ class _ProfilePicState extends State<ProfilePic> {
     imageCache!.clear();
     final dir = await getApplicationDocumentsDirectory();
     final exists = await File("${dir.path}/profile_pic/user.png").exists();
+    imageCache!.clearLiveImages();
     setState(() {
       documentsDir = dir;
       user_image = FileImage(File("${documentsDir.path}/profile_pic/user.png"));

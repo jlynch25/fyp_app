@@ -136,6 +136,8 @@ class _EditPhotoScreenState extends State<EditPhotoScreen> {
 
                                   await file.writeAsBytes(_croppedData!);
                                   imageCache!.evict(FileImage(file));
+                                  // Image.memory(_croppedData!,
+                                  //     gaplessPlayback: true);
 
                                   Navigator.pushNamed(
                                       context, ProfileScreen.routeName);
