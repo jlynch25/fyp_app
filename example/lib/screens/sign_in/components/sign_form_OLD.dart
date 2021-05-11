@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 // import 'package:flutterClient/components/custom_surfix_icon.dart';
 import 'package:mylib_example/components/form_error.dart';
+import 'package:mylib_example/files.dart';
+import 'package:mylib_example/main.dart';
 import 'package:mylib_example/screens/forgot_password/forgot_password_screen.dart';
 import 'package:mylib_example/screens/home/home_screen.dart';
 import 'package:mylib_example/screens/profile/profile_screen.dart';
@@ -26,6 +30,7 @@ class _SignFormState extends State<SignFormOLd> {
   bool remember = false;
   final List<String> errors = [];
   String loginScceusful = "false";
+  String blockchainResult = "false";
 
   void addError({required String error}) {
     if (!errors.contains(error))
@@ -93,6 +98,33 @@ class _SignFormState extends State<SignFormOLd> {
                 }
                 if (loginScceusful == "true") {
                   // if all are valid then go to success screen
+                  // Navigator.pushNamed(context, HomeScreen.routeName);
+
+                  blockchainResult = (await blockchainExists())!;
+                  if (blockchainResult == "false") {
+                    print("Requesting Blockchain");
+                    try {
+                      await widget.service
+                          .downloadGenBlock()
+                          .then((val) => setState(() {
+                                blockchainResult = val!;
+                              }));
+                    } on GrpcError catch (err) {
+                      // _buildDialog(context, err.message);
+                      final snackBar = SnackBar(
+                        content: Text(err.message!),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } on FileSystemException catch (err) {
+                      final snackBar = SnackBar(
+                        content: Text(err.message),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  } else {
+                    print("Blockchain exists");
+                  }
+
                   Navigator.pushNamed(context, HomeScreen.routeName);
                 } else {
                   _buildDialog(context, loginScceusful);

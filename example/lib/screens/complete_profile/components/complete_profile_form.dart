@@ -8,9 +8,6 @@ import 'package:mylib_example/files.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/screens/home/home_screen.dart';
 // import 'package:flutterClient/screens/otp/otp_screen.dart';
-import 'package:mylib_example/screens/login_success/login_success_screen.dart';
-import 'package:mylib_example/screens/otp/otp_screen.dart';
-import 'package:mylib_example/screens/profile/profile_screen.dart';
 import 'package:mylib_example/service/chat_service.dart';
 import 'package:grpc/grpc.dart';
 
@@ -79,7 +76,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
                 if (updateResult == "true") {
                   // if all are valid then go to success screen
-                  Navigator.pushNamed(context, HomeScreen.routeName);
+                  // Navigator.pushNamed(context, HomeScreen.routeName);
 
                   updateResult = "false";
                   // Lets do some backgound work
@@ -128,7 +125,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                       final snackBar = SnackBar(
                         content: Text(err.message!),
                       );
-                      Scaffold.of(context).showSnackBar(snackBar);
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                     if (updateResult == "true") {
                       print("A new Wallet done");
@@ -137,18 +134,15 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                       final snackBar = SnackBar(
                         content: Text(updateResult),
                       );
-                      Scaffold.of(context).showSnackBar(snackBar);
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   } else {
                     print("A wallet existed");
                   }
-                  // TODO - download inital blockchain
-                  updateResult = "false";
-                  //
-                  // TODO - grpc get bootstrap ip addresses for blopckchain network
-                  //
-                  // TODO - start node (with timeout ) only need to wait if an error is returned
 
+                  updateResult = "false";
+
+                  Navigator.pushNamed(context, HomeScreen.routeName);
                 } else {
                   _buildDialog(context, updateResult);
                 }
