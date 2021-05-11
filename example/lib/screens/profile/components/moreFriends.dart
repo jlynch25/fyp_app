@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grpc/grpc.dart';
 import 'package:mylib/mylib.dart';
+import 'package:mylib_example/constants.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/service/chat_service.dart';
@@ -27,7 +28,7 @@ class _MoreFriendsState extends State<MoreFriends> {
           height: 100,
           width: 90,
           decoration: BoxDecoration(
-              color: Color(0xfff1f3f6),
+              color: kPrimaryLightColor, //Color(0xfff1f3f6),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(

@@ -6,6 +6,7 @@ import 'package:grpc/grpc.dart';
 import 'package:mylib/mylib.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/screens/friend_list/friend_list.dart';
+import 'package:mylib_example/screens/settings/settings_screen.dart';
 // import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/service/chat_service.dart';
 import 'package:mylib_example/size_config.dart';
@@ -44,11 +45,11 @@ class _BodyState extends State<Body> {
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: [
-          Row(children: [
-            SizedBox(width: 20),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            // SizedBox(width: 20),
             ProfilePic(),
-            SizedBox(width: 50),
-            Column(children: [
+            // SizedBox(width: 30),
+            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
               Text(
                 "${user.name}",
                 overflow: TextOverflow.ellipsis,
@@ -59,13 +60,27 @@ class _BodyState extends State<Body> {
                 textAlign: TextAlign.left,
               ),
               SizedBox(height: 15),
-              OutlinedButton.icon(
-                onPressed: () {
-                  // Respond to button press
-                },
-                icon: Icon(Icons.edit, size: 18),
-                label: Text("Edit Profile"),
-              )
+              Row(
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      // Respond to button press
+                    },
+                    icon: Icon(Icons.edit, size: 18),
+                    label: Text("Edit"),
+                  ),
+                  SizedBox(width: 10),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      // Respond to button press
+                      Navigator.pushNamed(context, SettingsScreen.routeName);
+                    },
+                    icon: Icon(Icons.settings, size: 18),
+                    label: Text("Settings"),
+                  ),
+                ],
+              ),
+              //
             ]),
           ]),
           SizedBox(height: 20),
@@ -150,150 +165,6 @@ class _BodyState extends State<Body> {
                   );
                 }
               }),
-          ProfileMenu(
-            text: "My Account",
-            icon: Icon(
-              Icons.account_circle,
-              size: getProportionateScreenWidth(18),
-            ),
-            press: () => {_buildDialog(context, user.wallets.toString())},
-          ),
-          ProfileMenu(
-            text: "create wallet",
-            icon: Icon(
-              Icons.request_quote,
-              size: getProportionateScreenWidth(18),
-            ),
-            press: () async {
-              // user.walletAddress = await Mylib.blockchainCreateWallet("3000");
-
-              try {
-                await widget.service
-                    .listXFriends("1")
-                    .then((val) => setState(() {
-                          print(val);
-                        }));
-              } on GrpcError catch (err) {
-                _buildDialog(context, err.message!);
-              }
-              // if (updateResult == "true") {
-              //   _buildDialog(context, "user.walletAddress");
-              // } else {
-              //   _buildDialog(context, updateResult);
-              // }
-            },
-          ),
-          ProfileMenu(
-            text: "get Blockchain now",
-            icon: Icon(
-              Icons.account_balance,
-              size: getProportionateScreenWidth(18),
-            ),
-            press: () async {
-              try {
-                await widget.service
-                    .downloadGenBlock()
-                    .then((val) => setState(() {
-                          blockchainResult = val!;
-                        }));
-              } on GrpcError catch (err) {
-                // _buildDialog(context, err.message);
-                final snackBar = SnackBar(
-                  content: Text(err.message!),
-                );
-                Scaffold.of(context).showSnackBar(snackBar);
-              } on FileSystemException catch (err) {
-                final snackBar = SnackBar(
-                  content: Text(err.message),
-                );
-                Scaffold.of(context).showSnackBar(snackBar);
-              }
-            },
-          ),
-          ProfileMenu(
-            text: "Create BlockChain",
-            icon: Icon(
-              Icons.create_new_folder,
-              size: getProportionateScreenWidth(18),
-            ),
-            press: () async {
-              try {
-                userBalance = (await Mylib.blockchainCreateBlockChain(
-                    user.wallets[0].address, "3000"))!;
-              } on Error catch (err) {
-                _buildDialog(context, err.toString());
-              }
-              _buildDialog(context, userBalance);
-            },
-          ),
-          ProfileMenu(
-            text: "add/remove Friends",
-            icon: Icon(
-              Icons.group,
-              size: getProportionateScreenWidth(18),
-            ),
-            press: () async {
-              try {
-                await widget.service.addFriends([
-                  // "606b92277f2162d6454fbe81",
-                  // "606b344656d2e9c987d5f883",
-                  // "6066faa235b24a12f4b8c471"
-                  "60812b18497ac8be8651d507"
-                ]).then((val) => setState(() {
-                      updateResult = val!;
-                    }));
-              } on GrpcError catch (err) {
-                _buildDialog(context, err.message!);
-              }
-              if (updateResult == "true") {
-                _buildDialog(context, "done :)");
-              } else {
-                _buildDialog(context, updateResult);
-              }
-            },
-          ),
-          ProfileMenu(
-            text: "Send curancy",
-            icon: Icon(
-              Icons.create_new_folder,
-              size: getProportionateScreenWidth(18),
-            ),
-            press: () async {
-              try {
-                // userBalance = await Mylib.blockchainSend(user.walletAddress,
-                // "1HYjD8sMSzsNsRMErxZJcsnBKkCamBrdJm", 2, "3000", true);
-              } on Error catch (err) {
-                _buildDialog(context, err.toString());
-              }
-              _buildDialog(context, userBalance);
-            },
-          ),
-          ProfileMenu(
-            text: "join BlockChain network",
-            icon: Icon(
-              Icons.create_new_folder,
-              size: getProportionateScreenWidth(18),
-            ),
-            press: () async {
-              try {
-                // userBalance =
-                // await Mylib.blockchainStartNode(user.wallet.address, "3000", [""]);
-              } on Error catch (err) {
-                _buildDialog(context, err.toString());
-              }
-              _buildDialog(context, userBalance);
-            },
-          ),
-          ProfileMenu(
-            text: "list Friends",
-            icon: Icon(
-              Icons.group,
-              size: getProportionateScreenWidth(18),
-            ),
-            press: () async {
-              Navigator.pushNamed(context, FriendListScreen.routeName);
-            },
-          ),
         ],
       ),
     );

@@ -10,6 +10,7 @@ import 'package:mylib_example/screens/request_currency/request_curreny_screen.da
 import 'package:mylib_example/screens/send.dart/send_screen.dart';
 import 'package:mylib_example/screens/send_from_request/send_from_request_screen.dart';
 import 'package:mylib_example/screens/send_select_address.dart/send_select_address_screen.dart';
+import 'package:mylib_example/screens/settings/settings_screen.dart';
 import 'package:mylib_example/screens/sign_in/sign_in_screen.dart';
 import 'package:mylib_example/screens/forgot_password/forgot_password_screen.dart';
 import 'package:mylib_example/screens/sign_up/sign_up_screen.dart';
@@ -40,4 +41,5 @@ final Map<String, WidgetBuilder> routes = {
   NetworkScreen.routeName: (context) => NetworkScreen(ChatService()),
   RequestCurrencyScreen.routeName: (context) => RequestCurrencyScreen(),
   NFCScannerScreen.routeName: (context) => NFCScannerScreen(),
+  SettingsScreen.routeName: (context) => SettingsScreen(ChatService()),
 };

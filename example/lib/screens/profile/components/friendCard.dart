@@ -4,6 +4,7 @@ import 'package:grpc/grpc.dart';
 import 'package:mylib/mylib.dart';
 import 'package:mylib_example/components/friend_details.dart';
 import 'package:mylib_example/components/send_args.dart';
+import 'package:mylib_example/constants.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/screens/profile/profile_screen.dart';
@@ -41,7 +42,7 @@ class _FriendCardState extends State<FriendCard> {
           height: 120,
           width: 90,
           decoration: BoxDecoration(
-              color: Color(0xfff1f3f6),
+              color: kPrimaryLightColor, //Color(0xfff1f3f6),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
