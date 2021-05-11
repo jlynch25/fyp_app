@@ -33,9 +33,9 @@ class _MoreFriendsState extends State<MoreFriends> {
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey,
-                    offset: Offset(3, 1),
-                    blurRadius: 7,
-                    spreadRadius: 2)
+                    offset: Offset(2, 1),
+                    blurRadius: 3,
+                    spreadRadius: 1)
               ]),
           child: Column(
             children: <Widget>[

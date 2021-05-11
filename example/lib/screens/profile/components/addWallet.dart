@@ -33,7 +33,7 @@ class _AddWalletState extends State<AddWallet> {
                 BoxShadow(
                     color: Colors.grey,
                     offset: Offset(3, 1),
-                    blurRadius: 7,
+                    blurRadius: 4,
                     spreadRadius: 2)
               ]),
           child: Column(

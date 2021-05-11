@@ -45,8 +45,8 @@ class _FriendCardSendState extends State<FriendCardSend> {
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey,
-                    offset: Offset(3, 1),
-                    blurRadius: 7,
+                    offset: Offset(2, 1),
+                    blurRadius: 3,
                     spreadRadius: 2)
               ]),
           child: Column(
