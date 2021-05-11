@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mylib/mylib.dart';
 import 'package:mylib_example/components/default_button.dart';
 import 'package:mylib_example/protos/service.pb.dart';
 import 'package:mylib_example/screens/home/home_screen.dart';
 import 'package:mylib_example/service/chat_service.dart';
 import 'package:mylib_example/size_config.dart';
+import 'dart:async';
+import 'package:local_auth/local_auth.dart';
 
 class Body extends StatefulWidget {
   final String recipientAddress;
@@ -23,6 +26,14 @@ class _BodyState extends State<Body> {
   late int _newbalance = _balance - int.parse(widget.amount);
   late Future<String?> balance;
   late String output;
+
+  final LocalAuthentication auth = LocalAuthentication();
+  _SupportState _supportState = _SupportState.unknown;
+  bool? _canCheckBiometrics;
+  List<BiometricType>? _availableBiometrics;
+  String _authorized = 'Not Authorized';
+  bool _isAuthenticating = false;
+
   _BodyState() {
     _wallets = user.wallets;
     _currentWalletSelected = user.wallets[0];
@@ -33,6 +44,18 @@ class _BodyState extends State<Body> {
     super.initState();
     balance =
         Mylib.blockchainGetBalance(_currentWalletSelected.address, "3000");
+
+    auth.isDeviceSupported().then(
+          (isSupported) => setState(() => _supportState = isSupported
+              ? _SupportState.supported
+              : _SupportState.unsupported),
+        );
+
+    print("This device is ${_supportState.toString()}");
+    _getAvailableBiometrics();
+    print('Available biometrics: $_availableBiometrics');
+    _checkBiometrics();
+    print('Can check biometrics: $_canCheckBiometrics');
   }
 
   void _onDropDownWalletSelected(Wallet newValueSelected) {
@@ -52,6 +75,123 @@ class _BodyState extends State<Body> {
     });
   }
 
+  Future<void> _checkBiometrics() async {
+    late bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+      print(e);
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+    });
+  }
+
+  Future<void> _getAvailableBiometrics() async {
+    late List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await auth.getAvailableBiometrics();
+    } on PlatformException catch (e) {
+      availableBiometrics = <BiometricType>[];
+      print(e);
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _availableBiometrics = availableBiometrics;
+    });
+  }
+
+  Future<void> _authenticate() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticate(
+          localizedReason: 'Let OS determine authentication method',
+          useErrorDialogs: true,
+          stickyAuth: true);
+      setState(() {
+        _isAuthenticating = false;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = "Error - ${e.message}";
+      });
+      return;
+    }
+    if (!mounted) return;
+
+    setState(
+        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+  }
+
+  Future<void> _authenticateWithBiometrics() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticate(
+          localizedReason: 'Scan your fingerprint to authenticate',
+          useErrorDialogs: true,
+          stickyAuth: true,
+          biometricOnly: false);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Authenticating';
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = "Error - ${e.message}";
+      });
+      return;
+    }
+    if (!mounted) return;
+
+    final String message = authenticated ? 'Authorized' : 'Not Authorized';
+    setState(() {
+      _authorized = message;
+    });
+
+    if (authenticated) {
+      if (widget.amount.isNotEmpty &&
+          widget.recipientAddress.isNotEmpty &&
+          _currentWalletSelected.address.isNotEmpty) {
+        try {
+          output = await Mylib.blockchainSend(_currentWalletSelected.address,
+              widget.recipientAddress, int.parse(widget.amount), "3000", true);
+
+          final snackBar = SnackBar(
+            content: Text(output),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } on Error catch (err) {
+          print(err);
+        }
+        if (output == "Success!") {
+          Navigator.pop(context);
+          Navigator.pushNamed(context, HomeScreen.routeName);
+        }
+      }
+    }
+  }
+
+  void _cancelAuthentication() async {
+    await auth.stopAuthentication();
+    setState(() => _isAuthenticating = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -68,20 +208,22 @@ class _BodyState extends State<Body> {
                     "Send ₿${widget.amount} ",
                     style: Theme.of(context).textTheme.headline5,
                   ),
-                  SizedBox(height: getProportionateScreenHeight(30)),
+                  SizedBox(height: getProportionateScreenHeight(20)),
                   Text(
                     "To ${widget.recipientName} ",
                     style: Theme.of(context).textTheme.headline4,
                   ),
+                  SizedBox(height: getProportionateScreenHeight(10)),
                   Text(
-                    "Their Address: ${widget.recipientAddress}",
+                    "Their Primary Wallet's Address: ${widget.recipientAddress}",
                     style: Theme.of(context).textTheme.bodyText2,
+                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: getProportionateScreenHeight(30)),
+                  SizedBox(height: getProportionateScreenHeight(40)),
                   Row(
                     children: [
                       Text(
-                        "Select Wallet to use",
+                        "\t\t\t\tSelect Wallet to use",
                         style: Theme.of(context).textTheme.button,
                       ),
                       SizedBox(width: getProportionateScreenHeight(100)),
@@ -101,8 +243,9 @@ class _BodyState extends State<Body> {
                   ),
                   SizedBox(height: getProportionateScreenHeight(10)),
                   Text(
-                    "Your Address: ${_currentWalletSelected.address}",
+                    "Your Wallet's Address: ${_currentWalletSelected.address}",
                     style: Theme.of(context).textTheme.bodyText1,
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: getProportionateScreenHeight(30)),
                   FutureBuilder(
@@ -118,31 +261,68 @@ class _BodyState extends State<Body> {
                           return CircularProgressIndicator();
                         }
                       }),
-                  SizedBox(height: getProportionateScreenHeight(30)),
+                  SizedBox(height: getProportionateScreenHeight(40)),
                   DefaultButton(
                     text: "Send",
                     press: () async {
+                      FocusScope.of(context).unfocus();
                       if (widget.amount.isNotEmpty &&
                           widget.recipientAddress.isNotEmpty &&
                           _currentWalletSelected.address.isNotEmpty) {
-                        try {
-                          output = await Mylib.blockchainSend(
-                              _currentWalletSelected.address,
-                              widget.recipientAddress,
-                              int.parse(widget.amount),
-                              "3000",
-                              true);
+                        // LOCAL AUTH
+                        if (_supportState == _SupportState.supported) {
+                          // print("This device is supported");
+                          // _getAvailableBiometrics();
+                          // print('Available biometrics: $_availableBiometrics');
+                          // _checkBiometrics();
+                          // print('Can check biometrics: $_canCheckBiometrics');
 
-                          final snackBar = SnackBar(
-                            content: Text(output),
-                          );
-                          Scaffold.of(context).showSnackBar(snackBar);
-                        } on Error catch (err) {
-                          print(err);
-                        }
-                        if (output == "Success!") {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(context, HomeScreen.routeName);
+                          if (_canCheckBiometrics!) {
+                            _authenticateWithBiometrics();
+                          } else {
+                            try {
+                              output = await Mylib.blockchainSend(
+                                  _currentWalletSelected.address,
+                                  widget.recipientAddress,
+                                  int.parse(widget.amount),
+                                  "3000",
+                                  true);
+
+                              final snackBar = SnackBar(
+                                content: Text(output),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } on Error catch (err) {
+                              print(err);
+                            }
+                            if (output == "Success!") {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(
+                                  context, HomeScreen.routeName);
+                            }
+                          }
+                        } else {
+                          try {
+                            output = await Mylib.blockchainSend(
+                                _currentWalletSelected.address,
+                                widget.recipientAddress,
+                                int.parse(widget.amount),
+                                "3000",
+                                true);
+
+                            final snackBar = SnackBar(
+                              content: Text(output),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } on Error catch (err) {
+                            print(err);
+                          }
+                          if (output == "Success!") {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, HomeScreen.routeName);
+                          }
                         }
                       }
                     },
@@ -155,4 +335,10 @@ class _BodyState extends State<Body> {
       ),
     );
   }
+}
+
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
 }

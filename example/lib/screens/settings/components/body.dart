@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:grpc/grpc.dart';
 import 'package:mylib/mylib.dart';
@@ -11,6 +12,8 @@ import 'package:mylib_example/screens/sign_in/sign_in_screen.dart';
 // import 'package:mylib_example/screens/friend_list/friend_list.dart';
 import 'package:mylib_example/service/chat_service.dart';
 import 'package:mylib_example/size_config.dart';
+import 'dart:async';
+import 'package:local_auth/local_auth.dart';
 
 class Body extends StatefulWidget {
   final ChatService service;
@@ -25,12 +28,61 @@ class _BodyState extends State<Body> {
   String blockchainResult = "false";
   String userBalance = "0";
 
+  bool useLocalAuth = true;
+  final LocalAuthentication auth = LocalAuthentication();
+  _SupportState _supportState = _SupportState.unknown;
+  bool? _canCheckBiometrics;
+  List<BiometricType>? _availableBiometrics;
+
   @override
   void initState() {
     super.initState();
+
+    auth.isDeviceSupported().then(
+          (isSupported) => setState(() => _supportState = isSupported
+              ? _SupportState.supported
+              : _SupportState.unsupported),
+        );
+
+    print("This device is ${_supportState.toString()}");
+    _getAvailableBiometrics();
+    print('Available biometrics: $_availableBiometrics');
+    _checkBiometrics();
+    print('Can check biometrics: $_canCheckBiometrics');
+  }
+
+  Future<void> _checkBiometrics() async {
+    late bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+      print(e);
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+    });
+  }
+
+  Future<void> _getAvailableBiometrics() async {
+    late List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await auth.getAvailableBiometrics();
+    } on PlatformException catch (e) {
+      availableBiometrics = <BiometricType>[];
+      print(e);
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _availableBiometrics = availableBiometrics;
+    });
   }
 
   Widget build(BuildContext context) {
+    _checkBiometrics();
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
@@ -57,6 +109,41 @@ class _BodyState extends State<Body> {
                   SignInScreen.routeName, (Route<dynamic> route) => false),
             },
           ),
+          (_canCheckBiometrics!)
+              ? Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Container(
+                        child: Text(
+                          " \n\t\t\t\tLocal Authentication",
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(0.5),
+                              fontSize: 25),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                      SizedBox(width: getProportionateScreenWidth(25)),
+                      Icon(Icons.fingerprint, color: Colors.blueAccent),
+                      SizedBox(width: getProportionateScreenWidth(15)),
+                      Text("Require Finger Auth for Transactions",
+                          style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(width: getProportionateScreenWidth(25)),
+                      Switch(
+                          value: useLocalAuth,
+                          onChanged: (value) async {
+                            setState(() {
+                              useLocalAuth = value;
+                            });
+                          })
+                    ]),
+                  ],
+                )
+              : SizedBox(width: getProportionateScreenWidth(1)),
           SizedBox(
             width: double.infinity,
             child: Container(
@@ -231,4 +318,10 @@ Widget? _buildDialog(BuildContext context, String err) {
             ),
           ]));
   return null;
+}
+
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
 }
