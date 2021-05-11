@@ -135,7 +135,8 @@ class _WalletCardState extends State<WalletCard> {
                             final snackBar = SnackBar(
                               content: Text('Copied Address to Clipboard'),
                             );
-                            Scaffold.of(context).showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           });
                         } else if (result == 2) {
                           if (int.parse(_balance) > 0) {
@@ -249,7 +250,7 @@ class _WalletCardState extends State<WalletCard> {
             final snackBar = SnackBar(
               content: Text('Copied Address to Clipboard'),
             );
-            Scaffold.of(context).showSnackBar(snackBar);
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           });
         },
       ),
